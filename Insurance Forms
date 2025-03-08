@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insurance Quote Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f8f9fa;
+        }
+        .container {
+            width: 90%;
+            max-width: 500px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+            background-color: white;
+        }
+        h2 {
+            text-align: center;
+        }
+        label, button, select {
+            display: block;
+            margin-top: 10px;
+        }
+        input, button, select {
+            width: 50%;  /* Set input width to 50% */
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            width: 50%;  /* Set button width to 50% */
+            background-color: blue;
+            color: white;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 id="formTitle">Insurance Quote Submission</h2>
+
+        <!-- Language selection dropdown -->
+        <label for="language" id="languageLabel">Choose Language / 选择语言:</label>
+        <select id="language" onchange="changeLanguage()">
+            <option value="en">English</option>
+            <option value="zh">中文</option>
+        </select>
+
+        <form id="insuranceForm">
+            <label id="dateLabel">Date:</label>
+            <input type="date" id="date" required>
+
+            <label id="nameLabel">Name:</label>
+            <input type="text" id="name" required>
+
+            <label id="insuranceLabel">Current Insurance:</label>
+            <input type="text" id="insurance">
+
+            <label id="marriedLabel">Married:</label>
+            <select id="married">
+                <option value="Yes" id="marriedOptionYes">Yes</option>
+                <option value="No" id="marriedOptionNo">No</option>
+            </select>
+
+            <label id="ddcLabel">Defensive Driving Course:</label>
+            <input type="text" id="ddc">
+
+            <label id="accidentLabel">Accident History:</label>
+            <input type="text" id="accident">
+
+            <label id="insuranceYearsLabel">How long have you had insurance? (Years):</label>
+            <input type="number" id="insuranceYears" min="0">
+
+            <label id="vinLabel">VIN:</label>
+            <input type="text" id="vin" required>
+
+            <button type="submit" id="submitButton">Submit</button>
+        </form>
+    </div>
+
+    <script>
+        // Set the date input to the current date
+        window.onload = function() {
+            var today = new Date().toISOString().split('T')[0];
+            document.getElementById("date").value = today;
+
+            // Set default language to English on page load
+            changeLanguage();
+        };
+
+        // Language dictionary for both English and Chinese (with real Chinese characters)
+        const languageContent = {
+            en: {
+                formTitle: 'Insurance Quote Submission',
+                dateLabel: 'Date:',
+                nameLabel: 'Name:',
+                insuranceLabel: 'Current Insurance:',
+                marriedLabel: 'Married:',
+                ddcLabel: 'Defensive Driving Course:',
+                accidentLabel: 'Accident History:',
+                insuranceYearsLabel: 'How long have you had insurance? (Years):',
+                vinLabel: 'VIN:',
+                submitButton: 'Submit',
+                languageLabel: 'Choose Language / 选择语言:',
+                marriedOptionYes: 'Yes',
+                marriedOptionNo: 'No'
+            },
+            zh: {
+                formTitle: '保险报价提交',
+                dateLabel: '日期：',
+                nameLabel: '姓名：',
+                insuranceLabel: '当前保险：',
+                marriedLabel: '已婚：',
+                ddcLabel: '防御性驾驶课程：',
+                accidentLabel: '事故历史：',
+                insuranceYearsLabel: '您已经投保多久了？（年）：',
+                vinLabel: '车辆识别码：',
+                submitButton: '提交',
+                languageLabel: '选择语言 / Choose Language:',
+                marriedOptionYes: '是',
+                marriedOptionNo: '否'
+            }
+        };
+
+        // Function to switch language
+        function changeLanguage() {
+            const language = document.getElementById('language').value;
+            const elements = document.querySelectorAll('[id]');
+            const languageData = languageContent[language];
+
+            elements.forEach(element => {
+                const key = element.id;
+                if (languageData[key]) {
+                    element.textContent = languageData[key];
+                }
+
+                // Special case for select options (married options)
+                if (element.id === 'married') {
+                    const marriedOptions = element.querySelectorAll('option');
+                    marriedOptions.forEach(option => {
+                        if (language === 'en') {
+                            if (option.value === 'Yes') {
+                                option.textContent = languageContent.en.marriedOptionYes;
+                            } else {
+                                option.textContent = languageContent.en.marriedOptionNo;
+                            }
+                        } else if (language === 'zh') {
+                            if (option.value === 'Yes') {
+                                option.textContent = languageContent.zh.marriedOptionYes;
+                            } else {
+                                option.textContent = languageContent.zh.marriedOptionNo;
+                            }
+                        }
+                    });
+                }
+            });
+        }
+
+        document.getElementById("insuranceForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            var formData = {
+                name: document.getElementById("name").value,
+                date: document.getElementById("date").value,
+                insurance: document.getElementById("insurance").value,
+                married: document.getElementById("married").value,
+                ddc: document.getElementById("ddc").value,
+                accident: document.getElementById("accident").value,
+                insuranceYears: document.getElementById("insuranceYears").value,
+                vin: document.getElementById("vin").value
+            };
+
+            fetch("https://script.google.com/macros/s/AKfycbwIDBfXMuq8iHjd5o_vUc-tyTPPb1h55fNRcRhyV_EEJV8y-8n15phIBwyS0fshFt1Pkw/exec", {
+                method: "POST",
+                body: JSON.stringify(formData),
+                headers: { "Content-Type": "application/json" }
+            }).then(response => response.text())
+              .then(data => alert("Form Submitted: " + data))
+              .catch(error => alert("Error submitting form: " + error));
+        });
+    </script>
+</body>
+</html>
